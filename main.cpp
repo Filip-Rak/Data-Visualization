@@ -1,8 +1,11 @@
 // Headers for OpenGL and SFML
 // #include "stdafx.h"  // This line might be needed in some IDEs
+
+#pragma once
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include "main_loop.hpp"
 
 // Vertex shader source code
 const GLchar* vertexSource = R"glsl(
@@ -82,7 +85,8 @@ bool program_linked(GLuint program, bool console_dump = true, std::string name_i
 }
 
 
-int main() {
+int main() 
+{
     // Setup OpenGL context settings
     sf::ContextSettings settings;
     settings.depthBits = 24;     // Bits for depth buffer
@@ -164,28 +168,7 @@ int main() {
     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
     // Main event loop
-    bool running = true;
-    while (running) 
-    {
-        sf::Event windowEvent;
-        while (window.pollEvent(windowEvent)) 
-        {
-            if (windowEvent.type == sf::Event::Closed) 
-            {
-                running = false;  // Exit loop if the window is closed
-            }
-        }
-
-        // Clear the screen to black
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Draw the triangle using the vertex data
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        // Swap the front and back buffers
-        window.display();
-    }
+    main_loop(window, shaderProgram, vao, vbo);
 
     // Cleanup: delete shaders, buffers, and close the window
     glDeleteProgram(shaderProgram);
